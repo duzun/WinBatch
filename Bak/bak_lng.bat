@@ -1,1 +1,1 @@
-set bak_lng=%bak_lng%\Batch
+set bak_lng=%bak_lng%Batch
