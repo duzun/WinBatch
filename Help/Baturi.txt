@@ -1,0 +1,18 @@
+Comenzile interne DOS:
+======================
+MD, MkDir	- (Make Directory) Crearea unei directorii noi
+RD, RmDir	- (Remove Directory) Stergerea directoriei indicate, daca e goala
+CD, ChDir	- (Change Directory) Schimbarea directoriei pe discul curent
+Ren, Rename	- Redenumirea fisierelor sau directoriilor
+Del, Delete	- Stergerea fisierelor
+Copy		- Copyerea fisierelor
+Type		- Afisarea continutului unui fisier pe ecran
+Echo		- Afisarea unui mesaj pe ecran
+Rem		- (Remember) Textul ce urmeaza nu se executa, ci serveste drept comentariu
+Set		- Setarea variabililor din mediul MS-DOS
+if [exist]	- Indica conditia de executie a comenzii ce urmeaza
+shift		- Schimba parametrii dupa ordine, cu unul mai jos, adica %2->%1, %1->%0, s.a.m.d.
+
+
+ Pentru ca o anumita comanda sa nu se afise, inaintea ei trebuie de plasat simbolul "@", de exemplu comanda "Echo off" va face ca comenzile ce urmeaza in fisierul de autoexecutie curent sa nu fie afisate pe ecran, iar "@Echo off" va avea acelasi efect, numai ca nici aceasta comanda nu se va afisa.
+ Variabilile din mediu se apeleaza prin numele declarat intre simbolul "%", de ex., comanda "dir %temp%" va afisa continutul directoriei temporale, calea catre care se indica de catre variabila %temp%. Iata un exemplu de declarare a acestei variabile: Set temp=C:\Temp. 

@@ -1,0 +1,701 @@
+*******************************************************************************************
+Comanda: md 
+ 
+Creates a directory.
+
+MKDIR [drive:]path
+MD [drive:]path
+
+If Command Extensions are enabled MKDIR changes as follows:
+
+MKDIR creates any intermediate directories in the path, if needed.
+For example, assume \a does not exist then:
+
+    mkdir \a\b\c\d
+
+is the same as:
+
+    mkdir \a
+    chdir \a
+    mkdir b
+    chdir b
+    mkdir c
+    chdir c
+    mkdir d
+
+which is what you would have to type if extensions were disabled.
+*******************************************************************************************
+Comanda: cd 
+ 
+Displays the name of or changes the current directory.
+
+CHDIR [/D] [drive:][path]
+CHDIR [..]
+CD [/D] [drive:][path]
+CD [..]
+
+  ..   Specifies that you want to change to the parent directory.
+
+Type CD drive: to display the current directory in the specified drive.
+Type CD without parameters to display the current drive and directory.
+
+Use the /D switch to change current drive in addition to changing current
+directory for a drive.
+
+If Command Extensions are enabled CHDIR changes as follows:
+
+The current directory string is converted to use the same case as
+the on disk names.  So CD C:\TEMP would actually set the current
+directory to C:\Temp if that is the case on disk.
+
+CHDIR command does not treat spaces as delimiters, so it is possible to
+CD into a subdirectory name that contains a space without surrounding
+the name with quotes.  For example:
+
+    cd \winnt\profiles\username\programs\start menu
+
+is the same as:
+
+    cd "\winnt\profiles\username\programs\start menu"
+
+which is what you would have to type if extensions were disabled.
+*******************************************************************************************
+Comanda: rd 
+ 
+Removes (deletes) a directory.
+
+RMDIR [/S] [/Q] [drive:]path
+RD [/S] [/Q] [drive:]path
+
+    /S      Removes all directories and files in the specified directory
+            in addition to the directory itself.  Used to remove a directory
+            tree.
+
+    /Q      Quiet mode, do not ask if ok to remove a directory tree with /S
+*******************************************************************************************
+Comanda: dir 
+ 
+Displays a list of files and subdirectories in a directory.
+
+DIR [drive:][path][filename] [/A[[:]attributes]] [/B] [/C] [/D] [/L] [/N]
+  [/O[[:]sortorder]] [/P] [/Q] [/S] [/T[[:]timefield]] [/W] [/X] [/4]
+
+  [drive:][path][filename]
+              Specifies drive, directory, and/or files to list.
+
+  /A          Displays files with specified attributes.
+  attributes   D  Directories                R  Read-only files
+               H  Hidden files               A  Files ready for archiving
+               S  System files               -  Prefix meaning not
+  /B          Uses bare format (no heading information or summary).
+  /C          Display the thousand separator in file sizes.  This is the
+              default.  Use /-C to disable display of separator.
+  /D          Same as wide but files are list sorted by column.
+  /L          Uses lowercase.
+  /N          New long list format where filenames are on the far right.
+  /O          List by files in sorted order.
+  sortorder    N  By name (alphabetic)       S  By size (smallest first)
+               E  By extension (alphabetic)  D  By date/time (oldest first)
+               G  Group directories first    -  Prefix to reverse order
+  /P          Pauses after each screenful of information.
+  /Q          Display the owner of the file.
+  /S          Displays files in specified directory and all subdirectories.
+  /T          Controls which time field displayed or used for sorting
+  timefield   C  Creation
+              A  Last Access
+              W  Last Written
+  /W          Uses wide list format.
+  /X          This displays the short names generated for non-8dot3 file
+              names.  The format is that of /N with the short name inserted
+              before the long name. If no short name is present, blanks are
+              displayed in its place.
+  /4          Displays four-digit years
+
+Switches may be preset in the DIRCMD environment variable.  Override
+preset switches by prefixing any switch with - (hyphen)--for example, /-W.
+*******************************************************************************************
+Comanda: copy 
+ 
+Copies one or more files to another location.
+
+COPY [/D] [/V] [/N] [/Y | /-Y] [/Z] [/A | /B ] source [/A | /B]
+     [+ source [/A | /B] [+ ...]] [destination [/A | /B]]
+
+  source       Specifies the file or files to be copied.
+  /A           Indicates an ASCII text file.
+  /B           Indicates a binary file.
+  /D           Allow the destination file to be created decrypted
+  destination  Specifies the directory and/or filename for the new file(s).
+  /V           Verifies that new files are written correctly.
+  /N           Uses short filename, if available, when copying a file with a
+               non-8dot3 name.
+  /Y           Suppresses prompting to confirm you want to overwrite an
+               existing destination file.
+  /-Y          Causes prompting to confirm you want to overwrite an
+               existing destination file.
+  /Z           Copies networked files in restartable mode.
+
+The switch /Y may be preset in the COPYCMD environment variable.
+This may be overridden with /-Y on the command line.  Default is
+to prompt on overwrites unless COPY command is being executed from
+within a batch script.
+
+To append files, specify a single file for destination, but multiple files
+for source (using wildcards or file1+file2+file3 format).
+*******************************************************************************************
+Comanda: ren 
+ 
+Renames a file or files.
+
+RENAME [drive:][path]filename1 filename2.
+REN [drive:][path]filename1 filename2.
+
+Note that you cannot specify a new drive or path for your destination file.
+*******************************************************************************************
+Comanda: type 
+ 
+Displays the contents of a text file or files.
+
+TYPE [drive:][path]filename
+*******************************************************************************************
+Comanda: del 
+ 
+Deletes one or more files.
+
+DEL [/P] [/F] [/S] [/Q] [/A[[:]attributes]] names
+ERASE [/P] [/F] [/S] [/Q] [/A[[:]attributes]] names
+
+  names         Specifies a list of one or more files or directories.
+                Wildcards may be used to delete multiple files. If a
+                directory is specified, all files within the directory
+                will be deleted.
+
+  /P            Prompts for confirmation before deleting each file.
+  /F            Force deleting of read-only files.
+  /S            Delete specified files from all subdirectories.
+  /Q            Quiet mode, do not ask if ok to delete on global wildcard
+  /A            Selects files to delete based on attributes
+  attributes    R  Read-only files            S  System files
+                H  Hidden files               A  Files ready for archiving
+                -  Prefix meaning not
+
+If Command Extensions are enabled DEL and ERASE change as follows:
+
+The display semantics of the /S switch are reversed in that it shows
+you only the files that are deleted, not the ones it could not find.
+*******************************************************************************************
+Comanda: if 
+ 
+Performs conditional processing in batch programs.
+
+IF [NOT] ERRORLEVEL number command
+IF [NOT] string1==string2 command
+IF [NOT] EXIST filename command
+
+  NOT               Specifies that Windows XP should carry out 
+                    the command only if the condition is false.
+
+  ERRORLEVEL number Specifies a true condition if the last program run
+                    returned an exit code equal to or greater than the number
+                    specified.
+
+  string1==string2  Specifies a true condition if the specified text strings
+                    match.
+
+  EXIST filename    Specifies a true condition if the specified filename
+                    exists.
+
+  command           Specifies the command to carry out if the condition is
+                    met.  Command can be followed by ELSE command which
+                    will execute the command after the ELSE keyword if the
+                    specified condition is FALSE
+
+The ELSE clause must occur on the same line as the command after the IF.  For
+example:
+
+    IF EXIST filename. (
+        del filename.
+    ) ELSE (
+        echo filename. missing.
+    )
+
+The following would NOT work because the del command needs to be terminated
+by a newline:
+
+    IF EXIST filename. del filename. ELSE echo filename. missing
+
+Nor would the following work, since the ELSE command must be on the same line
+as the end of the IF command:
+
+    IF EXIST filename. del filename.
+    ELSE echo filename. missing
+
+The following would work if you want it all on one line:
+
+    IF EXIST filename. (del filename.) ELSE echo filename. missing
+
+If Command Extensions are enabled IF changes as follows:
+
+    IF [/I] string1 compare-op string2 command
+    IF CMDEXTVERSION number command
+    IF DEFINED variable command
+
+where compare-op may be one of:
+
+    EQU - equal
+    NEQ - not equal
+    LSS - less than
+    LEQ - less than or equal
+    GTR - greater than
+    GEQ - greater than or equal
+
+and the /I switch, if specified, says to do case insensitive string
+compares.  The /I switch can also be used on the string1==string2 form
+of IF.  These comparisons are generic, in that if both string1 and
+string2 are both comprised of all numeric digits, then the strings are
+converted to numbers and a numeric comparison is performed.
+
+The CMDEXTVERSION conditional works just like ERRORLEVEL, except it is
+comparing against an internal version number associated with the Command
+Extensions.  The first version is 1.  It will be incremented by one when
+significant enhancements are added to the Command Extensions.
+CMDEXTVERSION conditional is never true when Command Extensions are
+disabled.
+
+The DEFINED conditional works just like EXISTS except it takes an
+environment variable name and returns true if the environment variable
+is defined.
+
+%ERRORLEVEL% will expand into a string representation of
+the current value of ERRORLEVEL, provided that there is not already
+an environment variable with the name ERRORLEVEL, in which case you
+will get its value instead.  After running a program, the following
+illustrates ERRORLEVEL use:
+
+    goto answer%ERRORLEVEL%
+    :answer0
+    echo Program had return code 0
+    :answer1
+    echo Program had return code 1
+
+You can also using the numerical comparisons above:
+
+    IF %ERRORLEVEL% LEQ 1 goto okay
+
+%CMDCMDLINE% will expand into the original command line passed to
+CMD.EXE prior to any processing by CMD.EXE, provided that there is not
+already an environment variable with the name CMDCMDLINE, in which case
+you will get its value instead.
+
+%CMDEXTVERSION% will expand into a string representation of the
+current value of CMDEXTVERSION, provided that there is not already
+an environment variable with the name CMDEXTVERSION, in which case you
+will get its value instead.
+*******************************************************************************************
+Comanda: for 
+ 
+Runs a specified command for each file in a set of files.
+
+FOR %variable IN (set) DO command [command-parameters]
+
+  %variable  Specifies a single letter replaceable parameter.
+  (set)      Specifies a set of one or more files.  Wildcards may be used.
+  command    Specifies the command to carry out for each file.
+  command-parameters
+             Specifies parameters or switches for the specified command.
+
+To use the FOR command in a batch program, specify %%variable instead
+of %variable.  Variable names are case sensitive, so %i is different
+from %I.
+
+If Command Extensions are enabled, the following additional
+forms of the FOR command are supported:
+
+FOR /D %variable IN (set) DO command [command-parameters]
+
+    If set contains wildcards, then specifies to match against directory
+    names instead of file names.
+
+FOR /R [[drive:]path] %variable IN (set) DO command [command-parameters]
+
+    Walks the directory tree rooted at [drive:]path, executing the FOR
+    statement in each directory of the tree.  If no directory
+    specification is specified after /R then the current directory is
+    assumed.  If set is just a single period (.) character then it
+    will just enumerate the directory tree.
+
+FOR /L %variable IN (start,step,end) DO command [command-parameters]
+
+    The set is a sequence of numbers from start to end, by step amount.
+    So (1,1,5) would generate the sequence 1 2 3 4 5 and (5,-1,1) would
+    generate the sequence (5 4 3 2 1)
+
+FOR /F ["options"] %variable IN (file-set) DO command [command-parameters]
+FOR /F ["options"] %variable IN ("string") DO command [command-parameters]
+FOR /F ["options"] %variable IN ('command') DO command [command-parameters]
+
+    or, if usebackq option present:
+
+FOR /F ["options"] %variable IN (file-set) DO command [command-parameters]
+FOR /F ["options"] %variable IN ('string') DO command [command-parameters]
+FOR /F ["options"] %variable IN (`command`) DO command [command-parameters]
+
+    filenameset is one or more file names.  Each file is opened, read
+    and processed before going on to the next file in filenameset.
+    Processing consists of reading in the file, breaking it up into
+    individual lines of text and then parsing each line into zero or
+    more tokens.  The body of the for loop is then called with the
+    variable value(s) set to the found token string(s).  By default, /F
+    passes the first blank separated token from each line of each file.
+    Blank lines are skipped.  You can override the default parsing
+    behavior by specifying the optional "options" parameter.  This
+    is a quoted string which contains one or more keywords to specify
+    different parsing options.  The keywords are:
+
+        eol=c           - specifies an end of line comment character
+                          (just one)
+        skip=n          - specifies the number of lines to skip at the
+                          beginning of the file.
+        delims=xxx      - specifies a delimiter set.  This replaces the
+                          default delimiter set of space and tab.
+        tokens=x,y,m-n  - specifies which tokens from each line are to
+                          be passed to the for body for each iteration.
+                          This will cause additional variable names to
+                          be allocated.  The m-n form is a range,
+                          specifying the mth through the nth tokens.  If
+                          the last character in the tokens= string is an
+                          asterisk, then an additional variable is
+                          allocated and receives the remaining text on
+                          the line after the last token parsed.
+        usebackq        - specifies that the new semantics are in force,
+                          where a back quoted string is executed as a
+                          command and a single quoted string is a
+                          literal string command and allows the use of
+                          double quotes to quote file names in
+                          filenameset.
+
+    Some examples might help:
+
+FOR /F "eol=; tokens=2,3* delims=, " %i in (myfile.txt) do @echo %i %j %k
+
+    would parse each line in myfile.txt, ignoring lines that begin with
+    a semicolon, passing the 2nd and 3rd token from each line to the for
+    body, with tokens delimited by commas and/or spaces.  Notice the for
+    body statements reference %i to get the 2nd token, %j to get the
+    3rd token, and %k to get all remaining tokens after the 3rd.  For
+    file names that contain spaces, you need to quote the filenames with
+    double quotes.  In order to use double quotes in this manner, you also
+    need to use the usebackq option, otherwise the double quotes will be
+    interpreted as defining a literal string to parse.
+
+    %i is explicitly declared in the for statement and the %j and %k
+    are implicitly declared via the tokens= option.  You can specify up
+    to 26 tokens via the tokens= line, provided it does not cause an
+    attempt to declare a variable higher than the letter 'z' or 'Z'.
+    Remember, FOR variables are single-letter, case sensitive, global, 
+    and you can't have more than 52 total active at any one time.
+
+    You can also use the FOR /F parsing logic on an immediate string, by
+    making the filenameset between the parenthesis a quoted string,
+    using single quote characters.  It will be treated as a single line
+    of input from a file and parsed.
+
+    Finally, you can use the FOR /F command to parse the output of a
+    command.  You do this by making the filenameset between the
+    parenthesis a back quoted string.  It will be treated as a command
+    line, which is passed to a child CMD.EXE and the output is captured
+    into memory and parsed as if it was a file.  So the following
+    example:
+
+      FOR /F "usebackq delims==" %i IN (`set`) DO @echo %i
+
+    would enumerate the environment variable names in the current
+    environment.
+
+In addition, substitution of FOR variable references has been enhanced.
+You can now use the following optional syntax:
+
+    %~I         - expands %I removing any surrounding quotes (")
+    %~fI        - expands %I to a fully qualified path name
+    %~dI        - expands %I to a drive letter only
+    %~pI        - expands %I to a path only
+    %~nI        - expands %I to a file name only
+    %~xI        - expands %I to a file extension only
+    %~sI        - expanded path contains short names only
+    %~aI        - expands %I to file attributes of file
+    %~tI        - expands %I to date/time of file
+    %~zI        - expands %I to size of file
+    %~$PATH:I   - searches the directories listed in the PATH
+                   environment variable and expands %I to the
+                   fully qualified name of the first one found.
+                   If the environment variable name is not
+                   defined or the file is not found by the
+                   search, then this modifier expands to the
+                   empty string
+
+The modifiers can be combined to get compound results:
+
+    %~dpI       - expands %I to a drive letter and path only
+    %~nxI       - expands %I to a file name and extension only
+    %~fsI       - expands %I to a full path name with short names only
+    %~dp$PATH:I - searches the directories listed in the PATH
+                   environment variable for %I and expands to the
+                   drive letter and path of the first one found.
+    %~ftzaI     - expands %I to a DIR like output line
+
+In the above examples %I and PATH can be replaced by other valid
+values.  The %~ syntax is terminated by a valid FOR variable name.
+Picking upper case variable names like %I makes it more readable and
+avoids confusion with the modifiers, which are not case sensitive.
+*******************************************************************************************
+Comanda: rem 
+ 
+Records comments (remarks) in a batch file or CONFIG.SYS.
+
+REM [comment]
+*******************************************************************************************
+Comanda: set 
+ 
+Displays, sets, or removes cmd.exe environment variables.
+
+SET [variable=[string]]
+
+  variable  Specifies the environment-variable name.
+  string    Specifies a series of characters to assign to the variable.
+
+Type SET without parameters to display the current environment variables.
+
+If Command Extensions are enabled SET changes as follows:
+
+SET command invoked with just a variable name, no equal sign or value
+will display the value of all variables whose prefix matches the name
+given to the SET command.  For example:
+
+    SET P
+
+would display all variables that begin with the letter 'P'
+
+SET command will set the ERRORLEVEL to 1 if the variable name is not
+found in the current environment.
+
+SET command will not allow an equal sign to be part of the name of
+a variable.
+
+Two new switches have been added to the SET command:
+
+    SET /A expression
+    SET /P variable=[promptString]
+
+The /A switch specifies that the string to the right of the equal sign
+is a numerical expression that is evaluated.  The expression evaluator
+is pretty simple and supports the following operations, in decreasing
+order of precedence:
+
+    ()                  - grouping
+    ! ~ -               - unary operators
+    * / %               - arithmetic operators
+    + -                 - arithmetic operators
+    << >>               - logical shift
+    &                   - bitwise and
+    ^                   - bitwise exclusive or
+    |                   - bitwise or
+    = *= /= %= += -=    - assignment
+      &= ^= |= <<= >>=
+    ,                   - expression separator
+
+If you use any of the logical or modulus operators, you will need to
+enclose the expression string in quotes.  Any non-numeric strings in the
+expression are treated as environment variable names whose values are
+converted to numbers before using them.  If an environment variable name
+is specified but is not defined in the current environment, then a value
+of zero is used.  This allows you to do arithmetic with environment
+variable values without having to type all those % signs to get their
+values.  If SET /A is executed from the command line outside of a
+command script, then it displays the final value of the expression.  The
+assignment operator requires an environment variable name to the left of
+the assignment operator.  Numeric values are decimal numbers, unless
+prefixed by 0x for hexadecimal numbers, and 0 for octal numbers.
+So 0x12 is the same as 18 is the same as 022. Please note that the octal
+notation can be confusing: 08 and 09 are not valid numbers because 8 and
+9 are not valid octal digits.
+
+The /P switch allows you to set the value of a variable to a line of input
+entered by the user.  Displays the specified promptString before reading
+the line of input.  The promptString can be empty.
+
+Environment variable substitution has been enhanced as follows:
+
+    %PATH:str1=str2%
+
+would expand the PATH environment variable, substituting each occurrence
+of "str1" in the expanded result with "str2".  "str2" can be the empty
+string to effectively delete all occurrences of "str1" from the expanded
+output.  "str1" can begin with an asterisk, in which case it will match
+everything from the beginning of the expanded output to the first
+occurrence of the remaining portion of str1.
+
+May also specify substrings for an expansion.
+
+    %PATH:~10,5%
+
+would expand the PATH environment variable, and then use only the 5
+characters that begin at the 11th (offset 10) character of the expanded
+result.  If the length is not specified, then it defaults to the
+remainder of the variable value.  If either number (offset or length) is
+negative, then the number used is the length of the environment variable
+value added to the offset or length specified.
+
+    %PATH:~-10%
+
+would extract the last 10 characters of the PATH variable.
+
+    %PATH:~0,-2%
+
+would extract all but the last 2 characters of the PATH variable.
+
+Finally, support for delayed environment variable expansion has been
+added.  This support is always disabled by default, but may be
+enabled/disabled via the /V command line switch to CMD.EXE.  See CMD /?
+
+Delayed environment variable expansion is useful for getting around
+the limitations of the current expansion which happens when a line
+of text is read, not when it is executed.  The following example
+demonstrates the problem with immediate variable expansion:
+
+    set VAR=before
+    if "%VAR%" == "before" (
+        set VAR=after
+        if "%VAR%" == "after" @echo If you see this, it worked
+    )
+
+would never display the message, since the %VAR% in BOTH IF statements
+is substituted when the first IF statement is read, since it logically
+includes the body of the IF, which is a compound statement.  So the
+IF inside the compound statement is really comparing "before" with
+"after" which will never be equal.  Similarly, the following example
+will not work as expected:
+
+    set LIST=
+    for %i in (*) do set LIST=%LIST% %i
+    echo %LIST%
+
+in that it will NOT build up a list of files in the current directory,
+but instead will just set the LIST variable to the last file found.
+Again, this is because the %LIST% is expanded just once when the
+FOR statement is read, and at that time the LIST variable is empty.
+So the actual FOR loop we are executing is:
+
+    for %i in (*) do set LIST= %i
+
+which just keeps setting LIST to the last file found.
+
+Delayed environment variable expansion allows you to use a different
+character (the exclamation mark) to expand environment variables at
+execution time.  If delayed variable expansion is enabled, the above
+examples could be written as follows to work as intended:
+
+    set VAR=before
+    if "%VAR%" == "before" (
+        set VAR=after
+        if "!VAR!" == "after" @echo If you see this, it worked
+    )
+
+    set LIST=
+    for %i in (*) do set LIST=!LIST! %i
+    echo %LIST%
+
+If Command Extensions are enabled, then there are several dynamic
+environment variables that can be expanded but which don't show up in
+the list of variables displayed by SET.  These variable values are
+computed dynamically each time the value of the variable is expanded.
+If the user explicitly defines a variable with one of these names, then
+that definition will override the dynamic one described below:
+
+%CD% - expands to the current directory string.
+
+%DATE% - expands to current date using same format as DATE command.
+
+%TIME% - expands to current time using same format as TIME command.
+
+%RANDOM% - expands to a random decimal number between 0 and 32767.
+
+%ERRORLEVEL% - expands to the current ERRORLEVEL value
+
+%CMDEXTVERSION% - expands to the current Command Processor Extensions
+    version number.
+
+%CMDCMDLINE% - expands to the original command line that invoked the
+    Command Processor.
+*******************************************************************************************
+Comanda: shift 
+ 
+Changes the position of replaceable parameters in a batch file.
+
+SHIFT [/n]
+
+If Command Extensions are enabled the SHIFT command supports
+the /n switch which tells the command to start shifting at the
+nth argument, where n may be between zero and eight.  For example:
+
+    SHIFT /2
+
+would shift %3 to %2, %4 to %3, etc. and leave %0 and %1 unaffected.
+*******************************************************************************************
+Comanda: echo 
+ 
+Displays messages, or turns command-echoing on or off.
+
+  ECHO [ON | OFF]
+  ECHO [message]
+
+Type ECHO without parameters to display the current echo setting.
+*******************************************************************************************
+Comanda: break 
+ 
+Sets or Clears Extended CTRL+C checking on DOS system
+
+This is present for Compatibility with DOS systems. It has no effect
+under Windows XP.
+
+If Command Extensions are enabled, and running on the Windows XP
+platform, then the BREAK command will enter a hard coded breakpoint
+if being debugged by a debugger.
+*******************************************************************************************
+Comanda: prompt 
+ 
+Changes the cmd.exe command prompt.
+
+PROMPT [text]
+
+  text    Specifies a new command prompt.
+
+Prompt can be made up of normal characters and the following special codes:
+
+  $A   & (Ampersand)
+  $B   | (pipe)
+  $C   ( (Left parenthesis)
+  $D   Current date
+  $E   Escape code (ASCII code 27)
+  $F   ) (Right parenthesis)
+  $G   > (greater-than sign)
+  $H   Backspace (erases previous character)
+  $L   < (less-than sign)
+  $N   Current drive
+  $P   Current drive and path
+  $Q   = (equal sign)
+  $S     (space)
+  $T   Current time
+  $V   Windows XP version number
+  $_   Carriage return and linefeed
+  $$   $ (dollar sign)
+
+If Command Extensions are enabled the PROMPT command supports
+the following additional formatting characters:
+
+  $+   zero or more plus sign (+) characters depending upon the
+       depth of the PUSHD directory stack, one character for each
+       level pushed.
+
+  $M   Displays the remote name associated with the current drive
+       letter or the empty string if current drive is not a network
+       drive.

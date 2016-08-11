@@ -2,8 +2,8 @@
 rem --------------------------------------------------------------------------
 rem - Script pentru crearea si dublarea copiilor de rezerva ale unui proiect.-
 rem --------------------------------------------------------------------------
-rem Ver 5
-rem Date:   25.01.2009, 22:45
+rem Ver 6
+rem Date:   15.12.2010, 21:05
 rem Author: Dumitru Uzun (DUzun)
 rem Web:    http://duzun.teologie.net/
 rem --------------------------------------------------------------------------
@@ -14,15 +14,14 @@ rem --------------------------------------------------------------------------
 :defaults
 rem Defaults   
 
-if "%bak_ext%."    =="." set bak_ext=ppr, prj, dpr, bpr, pas, dcu, ddp, c, h, cpp, php, inc, js, bat, cmd, cfg, ini, inf, csv, xls, doc, htm, html, exe, com, dfm, ico
+if "%bak_ext%."    =="." set bak_ext=ppr, prj, dpr, bpr, pas, dcu, ddp, c, h, cpp, php, inc, js, css, bat, cmd, cfg, ini, inf, csv, xls, doc, htm, html, exe, com, dfm, ico
 if "%bak_upx%."    =="." set bak_upx=exe, com, dll, w?x, bpl  
 if "%bak_clean%."  =="." set bak_clean=*.ex~, *.~???, *.tmp, *.tds, *.qst, *.fpd, *.sym, *.ilc, *.ild, *.tds, *.ppu
 if "%bak_dir%."    =="." set bak_dir=%date%
 if "%bak_subdirs%."=="." set bak_subdirs=
-if "%bak_lng%."    =="." set bak_lng=
 if "%bak_dsk%."    =="." set bak_dsk=c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z
 if "%bak_dbl_dir%."=="." set bak_dbl_dir=
-if "%bak_dbl%."    =="." set bak_dbl=DUzunSys\DLib
+if "%bak_dbl%."    =="." set bak_dbl=DUzunSys
 goto e
 rem --------------------------------------------------------------------------
 :menu
@@ -39,7 +38,7 @@ rem --------------------------------------------------------------------------
     Echo.
     Echo.
     Echo M: Make setting files
-    Echo U: Copy %bak_main% to upper dirs
+    Echo U: Copy "%bak_main%" to upper dirs
 REM     Echo I: Init vars
 REM     Echo S: Show vars
 REM     Echo V: Cleanse vars
@@ -65,6 +64,8 @@ goto e
 rem --------------------------------------------------------------------------    
 :main
     %bak_func% settings .
+    title %bak_dn% console: Project %bak_lng%
+
     if '%1'=='/dbl' %bak_func% dbl
     if '%1'=='/bak' %bak_func% bak
     if '%1'=='/pak' %bak_func% pak
@@ -72,14 +73,23 @@ rem --------------------------------------------------------------------------
     if "%1."=="."   %bak_func% menu
 goto end
 rem --------------------------------------------------------------------------
+:set_my_lang
+REM    echo %~pnx3
+REM    echo %~nx3
+   set bak_ln=%~nx3
+goto e
+rem --------------------------------------------------------------------------
 :smain
-    set bak_main=%0
-    if '%1'=='/meup' %bak_main% /goto meup . -
-    set bak_func=call %bak_main% /goto
-    set my_baks=bak_ext, bak_upx, bak_lng, bak_dir, bak_dsk, bak_dbl_dir, bak_dbl, bak_net, bak_clean
+    set bak_main=%~dpnx0
+    set bak_nm=%~nx0
+    set bak_dn=%~n0
+    set bak_rt=%~dp0
+    if '%1'=='/meup' "%bak_main%" /goto meup
+    set bak_func=call "%bak_main%" /goto
+    set my_baks=bak_ext, bak_upx, bak_dir, bak_dsk, bak_dbl_dir, bak_dbl, bak_net, bak_clean
     set bak_timeout=400
     set bak_log=bak_log.txt
-        
+    
     if '%1'=='/mkfiles' %bak_func% mkfiles
 REM     If Exist Clearn.bat call Clearn.bat
 goto main
@@ -95,9 +105,9 @@ rem --------------------------------------------------------------------------
     %bak_func% bak %3
     Echo. & Echo  ~ Packing files . . . ~
     Echo.
-    start /wait /D.\Bak /MIN rar -m5 -s a %bak_dir%.rar %bak_dir%
-    if exist .\Bak\%bak_dir%.rar rd /S /Q .\Bak\%bak_dir%
-REM     start "Net Bak" %bak_func% net ".\Bak\%bak_dir%.rar"      
+    start /wait /D.\%bak_dn% /MIN rar -m5 -s a %bak_dir%.rar %bak_dir%
+    if exist .\%bak_dn%\%bak_dir%.rar rd /S /Q .\%bak_dn%\%bak_dir%
+REM     start "Net %bak_dn%" %bak_func% net ".\%bak_dn%\%bak_dir%.rar"      
     goto e
   )
   %bak_func% pak .      
@@ -107,11 +117,11 @@ rem --------------------------------------------------------------------------
    echo on
    if not "%bak_net%."=="." for %%i in (%bak_net%) do if exist "%%i\." (
       if not exist "%%i\%bak_name%\." md "%%i\%bak_name%"
-      if not exist "%%i\%bak_name%\Bak\." md "%%i\%bak_name%\Bak"
-      if exist "%%i\%bak_name%\Bak\." (
-         Echo. & Echo  ~ Network Bak . . . %%i & Echo.
-         copy %3 "%%i\%bak_lng%\Bak\" 
-         if not errorlevel 1 Echo Net: %3 - "%%i\%bak_lng%\Bak\">>%bak_log%
+      if not exist "%%i\%bak_name%\%bak_dn%\." md "%%i\%bak_name%\%bak_dn%"
+      if exist "%%i\%bak_name%\%bak_dn%\." (
+         Echo. & Echo  ~ Network %bak_dn% . . . %%i & Echo.
+         copy %3 "%%i\%bak_lng%\%bak_dn%\" 
+         if not errorlevel 1 Echo Net: %3 - "%%i\%bak_lng%\%bak_dn%\">>%bak_log%
       )
    )
    exit
@@ -133,9 +143,9 @@ rem --------------------------------------------------------------------------
   if not "%3."=="." (
     rem - Begining bak -----------------------------------------------------------
     if "%3" == "." (
-      If not exist .\Bak\. %bak_func% mkfiles .
-      if not exist ".\Bak\%bak_dir%\." md ".\Bak\%bak_dir%"
-      if not exist ".\Bak\%bak_dir%\." %bak_func% error Unable to create dir: \n %cd%\Bak\%bak_dir%\.
+      If not exist .\%bak_dn%\. %bak_func% mkfiles .
+      if not exist ".\%bak_dn%\%bak_dir%\." md ".\%bak_dn%\%bak_dir%"
+      if not exist ".\%bak_dn%\%bak_dir%\." %bak_func% error Unable to create dir: \n "%bak_rt%"\%bak_dn%\%bak_dir%\.
     
           
       Echo. & Echo  ~ Backing Up Files . . . ~
@@ -146,19 +156,19 @@ rem --------------------------------------------------------------------------
     %bak_func% upx %3
     %bak_func% clean %3 
 
-    if not exist ".\Bak\%bak_dir%\%3\." md ".\Bak\%bak_dir%\%3"    
+    if not exist ".\%bak_dn%\%bak_dir%\%3\." md ".\%bak_dn%\%bak_dir%\%3"    
     for %%n in (%bak_ext%) do for %%m in (%3\*.%%n) do if exist "%%m" (
-       copy "%%m" ".\Bak\%bak_dir%\%%m">nul
-       Echo "%%m" -> ".\Bak\%bak_dir%\%%m">>%bak_log%
+       copy "%%m" ".\%bak_dn%\%bak_dir%\%%m">nul
+       Echo "%%m" -> ".\%bak_dn%\%bak_dir%\%%m">>%bak_log%
        Echo %%m
     )
-    if not exist ".\Bak\%bak_dir%\%3\Bak\." (
-            md ".\Bak\%bak_dir%\%3\Bak"
-            attrib +h .\Bak\%bak_dir%\%3\Bak
+    if not exist ".\%bak_dn%\%bak_dir%\%3\%bak_dn%\." (
+            md ".\%bak_dn%\%bak_dir%\%3\%bak_dn%"
+            attrib +h .\%bak_dn%\%bak_dir%\%3\%bak_dn%
     ) 
-    for %%n in (%bak_ext%) do for %%m in (%3\Bak\*.%%n) do if exist "%%m" (
-       copy "%%m" ".\Bak\%bak_dir%\%%m">nul
-       Echo "%%m" -> ".\Bak\%bak_dir%\%%m">>%bak_log%
+    for %%n in (%bak_ext%) do for %%m in (%3\%bak_dn%\*.%%n) do if exist "%%m" (
+       copy "%%m" ".\%bak_dn%\%bak_dir%\%%m">nul
+       Echo "%%m" -> ".\%bak_dn%\%bak_dir%\%%m">>%bak_log%
        rem Echo %%m
     )
     rem - Recursive bak ----------------------------------------------------------
@@ -171,18 +181,18 @@ rem --------------------------------------------------------------------------
 :dbl
   if not "%3."=="." (
     rem - Current dir dbl --------------------------------------------------------
-    for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." if /I not "%cd%" == "%%d:\%%b" (
+    for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." if /I not "%bak_rt%" == "%%d:\%%b" (
         Echo. & Echo %%d:\%%b
         if not exist "%%d:\%%b%bak_dest%\%3\."  md "%%d:\%%b%bak_dest%\%3"
-        for %%n in (%bak_ext%) do for %%m in (%3\*.%%n) do if exist "%%m" if /I not "%cd%"=="%%d:\%%b%bak_dest%" (
+        for %%n in (%bak_ext%) do for %%m in (%3\*.%%n) do if exist "%%m" if /I not "%bak_rt%"=="%%d:\%%b%bak_dest%" (
     	   copy "%%m" "%%d:\%%b%bak_dest%\%%m">nul & Echo %%d:\%%b%bak_dest%\%%m >> %bak_log% & Echo %%d:\%%b%bak_dest%\%%m 
         )
     
-        if not exist "%%d:\%%b%bak_dest%\%3\Bak\." (
-            md "%%d:\%%b%bak_dest%\%3\Bak"
-            attrib +h %%d:\%%b%bak_dest%\%3\Bak
+        if not exist "%%d:\%%b%bak_dest%\%3\%bak_dn%\." (
+            md "%%d:\%%b%bak_dest%\%3\%bak_dn%"
+            attrib +h %%d:\%%b%bak_dest%\%3\%bak_dn%
         ) 
-        for %%n in (%bak_ext%) do for %%m in (%3\Bak\*.%%n) do if exist "%%m" if /I not "%cd%"=="%%d:\%%b%bak_dest%" (
+        for %%n in (%bak_ext%) do for %%m in (%3\%bak_dn%\*.%%n) do if exist "%%m" if /I not "%bak_rt%"=="%%d:\%%b%bak_dest%" (
     	   copy "%%m" "%%d:\%%b%bak_dest%\%%m">nul
            Echo %%d:\%%b%bak_dest%\%%m >> %bak_log%
            rem Echo %%d:\%%b%bak_dest%\%%m 
@@ -214,29 +224,32 @@ goto e
 rem --------------------------------------------------------------------------
 :settings
     %bak_func% del_vars
-    if "%3."=="." %bak_func% settings .
-    if exist ..\%3\Bak.bat call ..\%3\Bak.bat /goto settings ..\%3
-    if not exist ..\%3\Bak.bat if exist ..\%3\Bak\. %bak_func% settings ..\%3
-    
-    for %%n in (%my_baks%) do if exist "%3\Bak\%%n.bat" call "%3\Bak\%%n.bat"
+    if "%3."=="." %bak_func% settings .\
+    if     exist %~dp3\%bak_nm% %bak_func% settings %~dp3.
+    if not exist %~dp3\%bak_nm% if exist %~dp3\%bak_dn%\. %bak_func% settings %~dp3.
+
+    for %%n in (%my_baks%) do if exist "%~dpnx3\%bak_dn%\%%n.bat" call "%~dpnx3\%bak_dn%\%%n.bat"
     %bak_func% defaults
+
+    %bak_func% set_my_lang %~dpnx3.
+    set bak_lng=%bak_lng%\%bak_ln%
 goto e
 rem --------------------------------------------------------------------------
 :recur
     set bak_recur=
-    if exist "%3\Bak\bak_%4.bat" call "%3\Bak\bak_%4.bat"
+    if exist "%3\%bak_dn%\bak_%4.bat" call "%3\%bak_dn%\bak_%4.bat"
     if "%bak_recur%."=="." goto e
     for %%n in (%bak_recur%) do if exist %3\%%n\. %bak_func% %5 %3\%%n
     set bak_recur=
 goto e   
 rem --------------------------------------------------------------------------
 :meup
-    if "%3."=="." (
-        %bak_func% recur . updirs meup
-        goto e    
-    )    
-    type %bak_main% > %3\Bak.bat
-    %bak_func% recur %3 updirs meup
+for /R "%bak_rt%" %%i in (%bak_nm%) do if exist "%%i" if not '%bak_main%'=='%%i' (
+   echo "%%i"
+   attrib -s -h -r "%%i"
+   type "%bak_main%" > "%%i" && echo REM Updated: %date%, %time% >> "%%i" 
+   attrib +h "%%i"
+)
 goto e 
 rem --------------------------------------------------------------------------
 :log_prep
@@ -247,14 +260,13 @@ goto e
 rem --------------------------------------------------------------------------
 :mkfiles
   if not "%3."=="." (
-    if not exist %3\Bak\. (
-        md %3\Bak
-        attrib +h %3\Bak
+    if not exist %3\%bak_dn%\. (
+        md %3\%bak_dn%
+        attrib +h %3\%bak_dn%
     )
-    if not exist %3\Bak\. %bak_func% error Unable to create the "Bak" dir!   
-    for %%n in (%my_baks%) do if not exist "%3\Bak\%%n.bat" echo set %%n=%%%%n%%> "%3\Bak\%%n.bat"
-    if not exist "%3\Bak\bak_subdirs.bat" echo set bak_recur=> "%3\Bak\bak_subdirs.bat"
-    if not exist "%3\Bak\bak_updirs.bat" echo set bak_recur=> "%3\Bak\bak_updirs.bat"
+    if not exist %3\%bak_dn%\. %bak_func% error Unable to create the "%bak_dn%" dir!   
+    for %%n in (%my_baks%) do if not exist "%3\%bak_dn%\%%n.bat" echo set %%n=%%%%n%%> "%3\%bak_dn%\%%n.bat"
+    if not exist "%3\%bak_dn%\bak_subdirs.bat" echo set bak_recur=> "%3\%bak_dn%\bak_subdirs.bat"
     goto e
   )
   %bak_func% mkfiles .
@@ -300,12 +312,12 @@ goto e
 rem --------------------------------------------------------------------------
 :clean
     if not "%3."=="." (
-      If not exist .\Bak\. %bak_func% mkfiles %3
-      if not exist %3\Bak\tmp\. md %3\Bak\tmp  
-      if not exist %3\Bak\tmp\. goto e 
+      If not exist .\%bak_dn%\. %bak_func% mkfiles %3
+      if not exist %3\%bak_dn%\tmp\. md %3\%bak_dn%\tmp  
+      if not exist %3\%bak_dn%\tmp\. goto e 
        
       for %%m in (%bak_clean%) do if exist "%%m" (
-         copy /Y "%%m" %3\Bak\tmp\ > nul
+         copy /Y "%%m" %3\%bak_dn%\tmp\ > nul
          if not errorlevel 1 (
             del "%%m"
             echo Del: %%m
@@ -317,11 +329,11 @@ rem --------------------------------------------------------------------------
 goto e            
 rem --------------------------------------------------------------------------
 :del_vars
+    set bak_lng=
     set bak_ext=
     set bak_upx=
     set bak_clean=
     set bak_dir=
-    set bak_lng=
     set bak_dbl=
     set bak_dbl_dir=
     set bak_dsk=
@@ -334,9 +346,15 @@ rem --------------------------------------------------------------------------
     set bak_log=
     set bak_timeout=
     set bak_main=
+    set bak_nm=
+    set bak_dn=
+    set bak_rt=
+    set bak_ln=
 
 rem pause>nul
 goto del_vars
 rem exit
 rem --------------------------------------------------------------------------
 :e
+REM Updated: 03.03.2011, 13:10:31,03  
+REM Updated: 09.05.2012, 23:59:35,64  
