@@ -1,14 +1,15 @@
 @echo off
 @rem ---------------------------------------------------------
-@rem Ver   : 2.3 
+@rem Ver   : 2.4
+@rem Date 2.4 : 12.01.2016
 @rem Date 2.3 : 24.05.2012
 @rem Date 2.2 : 15.01.2010
-@rem Author: Dumitru Uzun (DUzun) (C)
-@rem Web   : http://duzun.teologie.net/
+@rem Author: Dumitru Uzun
+@rem Web   : https://duzun.me/
 @rem ---------------------------------------------------------
 
-if '%1.'=='/C.' goto %2 
-if '%1.'=='/D.' goto doo 
+if '%1.'=='/C.' goto %2
+if '%1.'=='/D.' goto doo
 
 @rem ~ Add here the commands you want to be shown ~
 @set enum=mv2, km, mmk, libertv, sk, mailru, gt, pd, eng, lerdic, aud, ro, wamp, apmon, wdc, bt, ps, o, moz
@@ -20,7 +21,7 @@ if '%1.'=='/D.' goto doo
 
 @rem ---------------------------------------------------------
 @rem  Script pentru rularea unor programe de la linia de comanda.
-@rem  Linia de comanda se cheama prin combinatia de taste 
+@rem  Linia de comanda se cheama prin combinatia de taste
 @rem    <Windows>+R  (Windows Run)
 @rem ---------------------------------------------------------
 
@@ -28,17 +29,17 @@ if '%1.'=='/D.' goto doo
 @rem Sintaxa scriptului este:
 @rem   c <cmd>
 @rem   unde:
-@rem   c      - numele acestui script, 
+@rem   c      - numele acestui script,
 @rem   <cmd>  - oricare din scurtaturile enumerate la "set enum=..."
 @rem Ex:
 @rem   c sk - ruleaza Skype
 @rem ---------------------------------------------------------
 
 :cver
-set cver=2.3
-echo Version: %cver% 
-echo. 
-goto e 
+set cver=2.4
+echo Version: %cver%
+echo.
+goto e
 
 @rem ---------------------------------------------------------
 @rem -------- /Begin of user data --------
@@ -111,15 +112,23 @@ set progdir=FileZilla FTP Client
 set exename=filezilla
 goto tpl
 
+	:cps64
+set _suff= (64 Bit)
 	:cps
 set title=PhotoShop
-set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS6
-if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS5
-if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS4
-if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS3
-if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS2
-if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS1
+set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS6%_suff%
+if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS5%_suff%
+if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS4%_suff%
+if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS3%_suff%
+if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS2%_suff%
+if not exist "%progpath%\." set progpath=%ProgramFiles%\Adobe\Adobe Photoshop CS1%_suff%
+if not exist "%progpath%\." (
+    if "%_suff%." == "." (
+        if "%archit%" == "64" goto cps64
+    )
+)
 set exename=Photoshop
+set _suff=
 goto tpl
 
 	:cmmk
@@ -204,7 +213,7 @@ set exename=LerDic
 goto tpl
 
     :ceng
-set title=Dic (En-Ro-En) 
+set title=Dic (En-Ro-En)
 set progdir=Dic(En-Ro-En)
 set exename=dictionar
 goto tpl
@@ -227,7 +236,7 @@ goto tpl
 
 	:calc
 set title=Alcohol 120%
-set progdir=Alcohol Soft\Alcohol 120 
+set progdir=Alcohol Soft\Alcohol 120
 set exename=Alcohol
 goto tpl
 
@@ -272,9 +281,9 @@ set progpath="%progpath%"
 
 :tpl_do
 if '%progpath%.'=='.'  set progpath=%3
- 
+
 echo %cmd%: %title%
-if not "%e%."=="end." goto %e% 
+if not "%e%."=="end." goto %e%
 
 :exec
 cd %progpath%
@@ -291,7 +300,7 @@ goto %e%
 
 @rem ---------------------------------------------------------
 :no_prog
-set not_inst=%not_inst%, %cmd% 
+set not_inst=%not_inst%, %cmd%
 if not "%e%"=="end" goto end_tpl
 
 Color 4E
@@ -304,8 +313,8 @@ goto end
 @rem ~ If no command is passed ~
 :c
 for %%I in (%self%) do (
-   if /I "%%~dpI" EQU "%windir%\" goto win 
-   if /I "%%~dpI" EQU "%windir%\system32\" goto win 
+   if /I "%%~dpI" EQU "%windir%\" goto win
+   if /I "%%~dpI" EQU "%windir%\system32\" goto win
    if not exist "%windir%\%%~nxI" goto selfcpy
 )
 call %self% /C cver
@@ -319,7 +328,7 @@ set self=%myself%
 set enum=%myenum%
 set myself=
 set myenum=
-if "%cver%."=="." goto selfcpy 
+if "%cver%."=="." goto selfcpy
 if /I "%myver%" LSS "%cver%" goto enum
 :selfcpy
   copy %self% "%windir%" > nul
@@ -337,6 +346,7 @@ set enum=
 set not_inst=
 set orig_=
 set search_progs_=
+set archit=
 :end_tpl
 set cmd=
 set title=
@@ -346,9 +356,16 @@ set exename=
 
 goto e
 @rem ---------------------------------------------------------
+:preg64
+    set archit=64
 :preg
 REM @echo off
-set search_progs_="D:\sys\Progs", "%ProgramFiles%", "%SystemDrive%\Program Files", "%SystemDrive%\Program Files (x86)"
+if not defined archit (
+    IF /I "%PROCESSOR_ARCHITECTURE%" == "amd64" GOTO preg64
+    IF /I "%PROCESSOR_ARCHITEW6432%" == "amd64" GOTO preg64
+)
+
+set search_progs_="D:\sys\Progs", "D:\VM\cmd", "%ProgramFiles%", "%SystemDrive%\Program Files", "%SystemDrive%\Program Files (x86)"
 set self_name=%~nx0
 set self="%~dpnx0"
 set orig_="D:\DUzunSys\%self_name%"
@@ -366,7 +383,7 @@ Color 81
 :param
   shift
   if '%1.'=='.' goto fwd
-  set param=%param%%1 
+  set param=%param%%1
 goto param
 
 :fwd
@@ -387,7 +404,7 @@ if not '%orig_%.'=='.' if /I '%self%' NEQ '%orig_%' if exist %orig_% (
      cd %%~dpI
      %orig_% %param%
      goto end
-  ) 
+  )
 )
 goto enum
 @rem ---------------------------------------------------------
