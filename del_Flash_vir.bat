@@ -1,11 +1,23 @@
 @ECHO off
+set vir_files=autorun.inf, xyw9tmdj.com
+set vir_dirs=%windir%, %windir%\system32, c:, d:, e:, h:, i:, j:, k:, l:, m:, n:, o:, p:, q:, r:, s:, t:, u:, v:, w:, x:, y:, z:
+  
+REM for %%n in (%vir_files%) do start /wait taskkill /f /im %%n 
 
-for %%d in (c:\, d:\, e:\, %windir%\, %windir%\system32\) do if exist %%d. for %%n in (autorun.inf, h1dwg20.exe, amvo.exe, amva.exe, amvo1.dll, amvo0.dll, xaftnqaa.dll) do (
-    if exist %%d%%n ( 
-        taskkill /f /im %%n > nul
-        attrib -s -h -r %%d%%n
-        del %%d%%n
-        echo %%d%%n  
+for %%d in (%vir_dirs%) do if exist %%d\. (
+REM   Echo  - %%d
+  for %%n in (%vir_files%) do (
+        attrib -s -h -r +a "%%d\%%n" > nul
+        del /F /Q "%%d\%%n"
+    if exist "%%d%\%n" ( 
+        echo %%d\%%n  
+REM         start /wait taskkill /f /im %%n 
+        attrib -s -h -r +a "%%d\%%n" > nul
+        del /F /Q "%%d\%%n"
     )
+  )  
 )
-pause>nul
+
+set vir_dirs=
+set vir_files=
+pause

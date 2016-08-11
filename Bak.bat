@@ -115,10 +115,10 @@ rem --------------------------------------------------------------------------
 :dbl
   if not "%3."=="." (
     rem - Current dir dbl --------------------------------------------------------
-    for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." (  
+    for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." if /I not "%cd%" == "%%d:\%%b" (
         Echo. & Echo %%d:\%%b
         if not exist "%%d:\%%b%bak_dest%\%3\."  md "%%d:\%%b%bak_dest%\%3"
-        for %%n in (%bak_ext%) do for %%m in (%3\*.%%n) do if exist "%%m" if not "%cd%"=="%%d:\%%b%bak_dest%" ( 
+        for %%n in (%bak_ext%) do for %%m in (%3\*.%%n) do if exist "%%m" if /I not "%cd%"=="%%d:\%%b%bak_dest%" (
     	   copy "%%m" "%%d:\%%b%bak_dest%\%%m">nul & Echo %%d:\%%b%bak_dest%\%%m >> %bak_log% & Echo %%d:\%%b%bak_dest%\%%m 
         )
     
@@ -126,7 +126,7 @@ rem --------------------------------------------------------------------------
             md "%%d:\%%b%bak_dest%\%3\Bak"
             attrib +h %%d:\%%b%bak_dest%\%3\Bak
         ) 
-        for %%n in (%bak_ext%) do for %%m in (%3\Bak\*.%%n) do if exist "%%m" if not "%cd%"=="%%d:\%%b%bak_dest%" ( 
+        for %%n in (%bak_ext%) do for %%m in (%3\Bak\*.%%n) do if exist "%%m" if /I not "%cd%"=="%%d:\%%b%bak_dest%" (
     	   copy "%%m" "%%d:\%%b%bak_dest%\%%m">nul
            Echo %%d:\%%b%bak_dest%\%%m >> %bak_log%
            rem Echo %%d:\%%b%bak_dest%\%%m 
