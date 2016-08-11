@@ -187,7 +187,7 @@ rem --------------------------------------------------------------------------
         if not "%bak_lng%."    =="." set bak_dest=%bak_dest%\%bak_lng%
 
         Echo. & Echo  ~ Doubling Files . . . ~
-        for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." (
+        for %%d in (%bak_dsk%) do if exist %%d:\nul for %%b in (%bak_dbl%) do if exist "%%d:\%%b\." if /I not "%cd%" == "%%d:\%%b" (
             if not exist "%%d:\%%b\%bak_dbl_dir%\." md "%%d:\%%b\%bak_dbl_dir%"
             if not exist "%%d:\%%b%bak_dest%\." md "%%d:\%%b%bak_dest%"
         )
